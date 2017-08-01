@@ -1,2 +1,2 @@
 # redux-panoptic
-Redux with templates, by eVisit
+Redux by eVisit

@@ -1,0 +1,35 @@
+{
+  "name": "redux-panoptic",
+  "version": "0.0.1",
+  "description": "Redux by eVisit",
+  "main": "dist/store.js",
+  "scripts": {
+    "clean": "node node_modules/rimraf/bin.js dist",
+    "build": "node node_modules/babel-cli/bin/babel.js src --out-dir dist",
+    "prepublish": "npm run clean && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eVisit/redux-panoptic.git"
+  },
+  "keywords": [
+    "evisit", "redux"
+  ],
+  "author": "eVisit",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eVisit/redux-panoptic/issues"
+  },
+  "homepage": "https://github.com/eVisit/redux-panoptic#readme",
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-core": "^6.22.1",
+    "babel-preset-env": "^1.6.0",
+    "babel-plugin-transform-object-rest-spread": "^6.19.0",
+    "redux": "^3.7.2",
+    "rimraf": "^2.5.2"
+  },
+  "dependencies": {
+    "evisit-core-js": "git+ssh://git@github.com/eVisit/eVisit-Core-JS.git"
+  }
+}
