@@ -1,4 +1,4 @@
-import { utils } from 'evisit-core-js';
+import { utils } from 'evisit-js-utils';
 import { regExpEscape } from './utils';
 
 const ACTION_SEPARATOR = '/',

@@ -30,6 +30,6 @@
     "rimraf": "^2.5.2"
   },
   "dependencies": {
-    "evisit-core-js": "git+ssh://git@github.com/eVisit/eVisit-Core-JS.git"
+    "evisit-core-js": "git+ssh://git@github.com/eVisit/evisit-js-utils.git"
   }
 }

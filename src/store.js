@@ -1,6 +1,6 @@
 import { createStore } from 'redux';
 import { defineActionsAndReducers } from './common';
-import { utils } from 'evisit-core-js';
+import { utils } from 'evisit-js-utils';
 
 function buildStore(storeTemplate, middleware) {
 
