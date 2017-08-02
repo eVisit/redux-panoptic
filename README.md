@@ -1,4 +1,4 @@
-# Redux with templates, brought to you by [eVisit](http://www.evisit.com) [![npm version](https://badge.fury.io/js/redux-panoptic.svg)](https://badge.fury.io/js/redux-panoptic) [![npm](https://img.shields.io/npm/dt/redux-panoptic.svg)](https://www.npmjs.org/package/redux-panoptic) ![MIT](https://img.shields.io/dub/l/vibe-d.svg) ![Platform - Android and iOS](https://img.shields.io/badge/platform-Android%20%7C%20iOS-yellow.svg)
+# Redux with templates, brought to you by [eVisit](http://www.evisit.com) [![npm version](https://badge.fury.io/js/redux-panoptic.svg)](https://badge.fury.io/js/redux-panoptic) [![npm](https://img.shields.io/npm/dt/redux-panoptic.svg)](https://www.npmjs.org/package/redux-panoptic) ![MIT](https://img.shields.io/dub/l/vibe-d.svg) ![Platform - All](https://img.shields.io/badge/platform-Android%20%7C%20iOS-yellow.svg)
 
 A Redux wrapper module that allows you to build out your redux store using templates. 
 
