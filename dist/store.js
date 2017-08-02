@@ -1,6 +1,14 @@
-import * as redux from 'redux';
-import { defineActionsAndReducers, _actionNameAlias, INITIAL_STATE, createReducer } from './common';
-import { utils } from 'evisit-js-utils';
+'use strict';
+
+var _redux = require('redux');
+
+var redux = _interopRequireWildcard(_redux);
+
+var _common = require('./common');
+
+var _evisitJsUtils = require('evisit-js-utils');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 /* Dispatch multiple dispatches simultaneously based on the data provided,
   the order of dispatch batches is ALWAYS: reset, set, update
@@ -23,11 +31,10 @@ import { utils } from 'evisit-js-utils';
 function multiDispatch(store, actions, actionData) {
   function dispatchOperation(operation, thisData, actionTemplate) {
     //Does this action support this operation?
-    let actionCreatorName = utils.getMetaNS(actionTemplate, 'methods', operation),
+    var actionCreatorName = _evisitJsUtils.utils.getMetaNS(actionTemplate, 'methods', operation),
         thisAction = actions[actionCreatorName];
 
-    if (!thisAction)
-      return;
+    if (!thisAction) return;
 
     //Dispatch operation
     store.dispatch(thisAction(thisData));
@@ -35,10 +42,9 @@ function multiDispatch(store, actions, actionData) {
 
   function doStoreDispatches(operation, thisData, actionTemplate) {
     //Object is the only valid thing we can handle
-    if (thisData === undefined || !actionTemplate)
-      return;
+    if (thisData === undefined || !actionTemplate) return;
 
-    let keys = Object.keys(actionTemplate);
+    var keys = Object.keys(actionTemplate);
 
     if (keys.length === 0) {
       //Dispatch me
@@ -47,11 +53,10 @@ function multiDispatch(store, actions, actionData) {
     }
 
     for (var i = 0, il = keys.length; i < il; i++) {
-      let key = keys[i];
-      if (!thisData.hasOwnProperty(key))
-        continue;
+      var key = keys[i];
+      if (!thisData.hasOwnProperty(key)) continue;
 
-      let thisActionTemplate = actionTemplate[key];
+      var thisActionTemplate = actionTemplate[key];
       //Dispatch child operations first, if any
       doStoreDispatches(operation, thisData[key], thisActionTemplate);
     }
@@ -64,11 +69,10 @@ function multiDispatch(store, actions, actionData) {
     }
   } else {
     //Order of operations is reset, set, update
-    let operations = ['reset', 'set', 'update'];
+    var operations = ['reset', 'set', 'update'];
     for (var i = 0, il = operations.length; i < il; i++) {
-      let operation = operations[i];
-      if (!actionData.hasOwnProperty(operation))
-        continue;
+      var operation = operations[i];
+      if (!actionData.hasOwnProperty(operation)) continue;
 
       doStoreDispatches(operation, actionData[operation], actions.template);
     }
@@ -77,7 +81,7 @@ function multiDispatch(store, actions, actionData) {
 
 function buildStore(storeTemplate, middleware) {
   var actions = {},
-      rootReducer = defineActionsAndReducers(storeTemplate, actions),
+      rootReducer = (0, _common.defineActionsAndReducers)(storeTemplate, actions),
       store = redux.createStore(rootReducer, middleware);
 
   Object.defineProperties(store, {
@@ -97,7 +101,7 @@ function buildStore(storeTemplate, middleware) {
       writable: true,
       configurable: true,
       enumberable: false,
-      value: function(data) {
+      value: function value(data) {
         return multiDispatch(store, actions, data);
       }
     },
@@ -105,7 +109,7 @@ function buildStore(storeTemplate, middleware) {
       writable: true,
       configurable: true,
       enumberable: false,
-      value: function(resetData) {
+      value: function value(resetData) {
         return multiDispatch(store, actions, { reset: resetData });
       }
     },
@@ -113,17 +117,17 @@ function buildStore(storeTemplate, middleware) {
       writable: true,
       configurable: true,
       enumberable: false,
-      value: function(setData) {
+      value: function value(setData) {
         return multiDispatch(store, actions, { set: setData });
-      }      
+      }
     },
     multiDispatchUpdate: {
       writable: true,
       configurable: true,
       enumberable: false,
-      value: function(updateData) {
+      value: function value(updateData) {
         return multiDispatch(store, actions, { update: updateData });
-      }      
+      }
     }
   });
 
@@ -131,10 +135,10 @@ function buildStore(storeTemplate, middleware) {
 }
 
 module.exports = Object.assign(module.exports, {
-  _actionNameAlias,
-  INITIAL_STATE,
-  createReducer,
-  defineActionsAndReducers,
-  multiDispatch,
-  buildStore
+  _actionNameAlias: _common._actionNameAlias,
+  INITIAL_STATE: _common.INITIAL_STATE,
+  createReducer: _common.createReducer,
+  defineActionsAndReducers: _common.defineActionsAndReducers,
+  multiDispatch: multiDispatch,
+  buildStore: buildStore
 }, redux);

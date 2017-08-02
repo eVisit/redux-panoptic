@@ -1,23 +1,10 @@
-# Redux with templates, brought to you by [eVisit](http://www.evisit.com) [![npm version](https://badge.fury.io/js/redux-panoptic.svg)](https://badge.fury.io/js/redux-panoptic) [![npm](https://img.shields.io/npm/dt/redux-panoptic.svg)](https://www.npmjs.org/package/redux-panoptic) ![MIT](https://img.shields.io/dub/l/vibe-d.svg) ![Platform - Android and iOS](https://img.shields.io/badge/platform-Android%20%7C%20iOS-yellow.svg)
-
-A Redux wrapper module that allows you to build out your redux store using templates. 
-
-## Table of contents
-- [Install](#install)
-- [Usage](#usage)
-
-## <a name="install"></a>Install
-
-`npm install --save redux-panoptic`
-
-## <a name="usage"></a>Usage
-
-Simply specify a template for your store, and build the store:
-
-```
 // Run: `npm run example`
 
-import { applyMiddleware, buildStore, createReducer, _actionNameAlias } from 'redux-panoptic';
+var RP = require('../dist/store'),
+    applyMiddleware = RP.applyMiddleware,
+    buildStore = RP.buildStore,
+    createReducer = RP.createReducer,
+    _actionNameAlias = RP._actionNameAlias;
 
 // Create some middleware to help us log dispatches
 var dispatchActionMiddleware = (store) => (next) => (action) => {
@@ -100,8 +87,3 @@ console.log('Store state #4 (after updating staticValues.*):\n' + JSON.stringify
 store.dispatch(store.actions.resetTODOS());
 store.dispatch(store.actions.resetStaticValues());
 console.log('Store state #5 (after reset):\n' + JSON.stringify(store.getState(), undefined, 2));
-```
-
-## <a name="more"></a>More
-
-For more information please see the <a href="https://github.com/eVisit/redux-panoptic/wiki">WIKI</a>

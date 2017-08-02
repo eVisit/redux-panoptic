@@ -1,7 +1,11 @@
-import { utils } from 'evisit-js-utils';
+'use strict';
 
-const ACTION_SEPARATOR = '/',
-      INITIAL_STATE = {};
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _evisitJsUtils = require('evisit-js-utils');
+
+var ACTION_SEPARATOR = '/',
+    INITIAL_STATE = {};
 
 // Default reducer for default object reducers
 function defaultReducer(state, action, defaultValue) {
@@ -13,10 +17,7 @@ function defaultReducer(state, action, defaultValue) {
 
     for (var i = 0, il = keys.length; i < il; i++) {
       var key = keys[i];
-      if (!obj2.hasOwnProperty(key))
-        newObject[key] = obj1[key];
-      else
-        newObject[key] = obj2[key];
+      if (!obj2.hasOwnProperty(key)) newObject[key] = obj1[key];else newObject[key] = obj2[key];
     }
 
     return newObject;
@@ -24,24 +25,22 @@ function defaultReducer(state, action, defaultValue) {
 
   var actionMethod = action.method,
       payload = action.payload[0];
-  
-  if (actionMethod === 'reset')
-    return defaultValue;
 
-  if (!payload)
-    return state;
+  if (actionMethod === 'reset') return defaultValue;
 
-  return (actionMethod === 'set') ? mergeObjects(defaultValue, payload) : mergeObjects(state, payload);
+  if (!payload) return state;
+
+  return actionMethod === 'set' ? mergeObjects(defaultValue, payload) : mergeObjects(state, payload);
 }
 
 // Get the default state for any reducer tree
 function getDefaultState(subAction, reducerMap) {
-  let keys = Object.keys(reducerMap),
+  var keys = Object.keys(reducerMap),
       newState = {};
 
   //Loop through every reducer
-  for (let i = 0, il = keys.length; i < il; i++) {
-    let key = keys[i],
+  for (var i = 0, il = keys.length; i < il; i++) {
+    var key = keys[i],
         subReducer = reducerMap[key],
         reducerState = subReducer(undefined, subAction);
 
@@ -55,24 +54,22 @@ function getDefaultState(subAction, reducerMap) {
 // This creates a default reducer for a "object" grouping in the template
 // Put another way, every "sub-object" in the template gets a default reducer
 function createDefaultReducer(reducerMap, boundAction) {
-  return function(state, action) {
-    let actionParts = (action.type) ? ('' + action.type).split(ACTION_SEPARATOR) : [],
+  return function (state, action) {
+    var actionParts = action.type ? ('' + action.type).split(ACTION_SEPARATOR) : [],
         actionName = actionParts[0];
 
-    let subAction = {
-          ...action,
-          type: actionParts.slice(1).join(ACTION_SEPARATOR)
-        };
+    var subAction = _extends({}, action, {
+      type: actionParts.slice(1).join(ACTION_SEPARATOR)
+    });
 
     if (state === undefined) {
       return getDefaultState(subAction, reducerMap);
     } else {
-      if (!actionName)
-        return defaultReducer(state, action, getDefaultState({}, reducerMap));
+      if (!actionName) return defaultReducer(state, action, getDefaultState({}, reducerMap));
 
-      let subReducer = reducerMap[actionName];
+      var subReducer = reducerMap[actionName];
       if (subReducer instanceof Function) {
-        let newState = {...state};
+        var newState = _extends({}, state);
         newState[actionName] = subReducer(state[actionName], subAction);
         return newState;
       }
@@ -86,25 +83,21 @@ function createDefaultReducer(reducerMap, boundAction) {
 // It changes the arguments such that this = state, and action is the last argument
 // The other arguments are specified as the payload from the action, which is always an array
 function createCustomReducer(customReducer, boundAction) {
-  return function(_state, action) {
-    let state = _state,
+  return function (_state, action) {
+    var state = _state,
         payload = action.payload;
 
     if (!action.method && (state === undefined || state === null)) {
-      if (!(customReducer instanceof Function))
-        return customReducer;
+      if (!(customReducer instanceof Function)) return customReducer;
 
       state = INITIAL_STATE;
     }
-    
-    if (!(customReducer instanceof Function))
-      return (action.method === 'reset') ? customReducer : action.payload[0];
 
-    if (!payload)
-      payload = [];
+    if (!(customReducer instanceof Function)) return action.method === 'reset' ? customReducer : action.payload[0];
 
-    if (!(payload instanceof Array))
-      payload = [payload];
+    if (!payload) payload = [];
+
+    if (!(payload instanceof Array)) payload = [payload];
 
     return customReducer.apply(state, payload.concat(action));
   };
@@ -112,7 +105,11 @@ function createCustomReducer(customReducer, boundAction) {
 
 // This is factory to quickly create a function that returns an action object
 function createReducerAction(actionType, actionMethod) {
-  function actionCreator(...args) {
+  function actionCreator() {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
     return { type: actionType, payload: args, method: actionMethod };
   }
 
@@ -131,17 +128,17 @@ function createReducerAction(actionType, actionMethod) {
 // Any time a function is encountered in the template the system assumes it is a custom reducer
 // Create those functions with this (see app/store/template/common for an example)
 function createReducer(reducerFunc, defaultValue) {
-  return function(...args) {
-    if (this === INITIAL_STATE)
-      return defaultValue;
+  return function () {
+    if (this === INITIAL_STATE) return defaultValue;
 
-    let action = args[args.length - 1] || {},
+    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    var action = args[args.length - 1] || {},
         actionMethod = action.method;
 
-    if (actionMethod === 'set')
-      return reducerFunc.apply(defaultValue, args);
-    else if (actionMethod === 'reset')
-      return defaultValue;
+    if (actionMethod === 'set') return reducerFunc.apply(defaultValue, args);else if (actionMethod === 'reset') return defaultValue;
 
     //Update
     return reducerFunc.apply(this, args);
@@ -150,67 +147,61 @@ function createReducer(reducerFunc, defaultValue) {
 
 // Create forward slash separated action names
 function fullActionType(parent, key) {
-  let actionType = [];
+  var actionType = [];
 
-  if (parent)
-    actionType.push(parent);
+  if (parent) actionType.push(parent);
 
-  if (key)
-    actionType.push(key);
+  if (key) actionType.push(key);
 
   return actionType.join(ACTION_SEPARATOR);
 }
 
 // This method mutates the action name into a friendly function name (a function that returns the action object)
 function actionTypeToActionCreatorName(actionType, actionMethod) {
-  let fullActionName = ('' + actionType)
-    .replace(/\/(\w)/g, function(m, p) {
-      return p.toUpperCase();
-    });
+  var fullActionName = ('' + actionType).replace(/\/(\w)/g, function (m, p) {
+    return p.toUpperCase();
+  });
 
   return actionMethod + fullActionName.charAt(0).toUpperCase() + fullActionName.substring(1);
 }
 
 function setPublicActionCreator(actionMap, actionType, actionName, actionMethod, type) {
-  let actoionCreatorName = actionTypeToActionCreatorName(actionName, actionMethod);
+  var actoionCreatorName = actionTypeToActionCreatorName(actionName, actionMethod);
   actionMap[actoionCreatorName] = createReducerAction(actionType, actionMethod);
   //console.log('Setting action: ', actoionCreatorName, actionType, actionName, actionMethod);
 
   //Get the path into the template, and get any current template object (if any)
-  let actionPath = actionType.replace(ACTION_SEPARATOR, '.'),
+  var actionPath = actionType.replace(ACTION_SEPARATOR, '.'),
       templatePath = 'template.' + actionPath,
-      templateActionObj = utils.get(actionMap, templatePath, {});
+      templateActionObj = _evisitJsUtils.utils.get(actionMap, templatePath, {});
 
   //If this is a property, set a meta flag saying it is
-  if (type === 'property')
-    utils.setMeta(templateActionObj, 'property', true);
+  if (type === 'property') _evisitJsUtils.utils.setMeta(templateActionObj, 'property', true);
 
   //Set the acceptable methods for this action on the meta object
-  utils.setMetaNS(templateActionObj, 'methods', actionMethod, actoionCreatorName);
+  _evisitJsUtils.utils.setMetaNS(templateActionObj, 'methods', actionMethod, actoionCreatorName);
 
   //Update the action template
-  utils.set(actionMap, templatePath, templateActionObj);
+  _evisitJsUtils.utils.set(actionMap, templatePath, templateActionObj);
 }
 
 // Walk the template and create reducers / actions
 function defineActionsAndReducers(template, actionMap, parentActionType, parentActionName, myKeyName) {
-  let keys = Object.keys(template),
+  var keys = Object.keys(template),
       reducerMap = {};
 
-  for (let i = 0, il = keys.length; i < il; i++) {
-    let key = keys[i];
-    if (key.charAt(0) === '_')
-      continue;
+  for (var i = 0, il = keys.length; i < il; i++) {
+    var key = keys[i];
+    if (key.charAt(0) === '_') continue;
 
-    let val = template[key],
+    var val = template[key],
         actionType = fullActionType(parentActionType, key),
         actionName = fullActionType(parentActionName, key);
 
     if (val instanceof Function) {
       //Override the name if we have an alias
-      if (val.hasOwnProperty('_actionNameAlias'))
-        actionName = fullActionType(parentActionName, val._actionNameAlias);
-        
+      if (val.hasOwnProperty('_actionNameAlias')) actionName = fullActionType(parentActionName, val._actionNameAlias);
+
       //Custom reducer
       reducerMap[key] = createCustomReducer(val, key);
       setPublicActionCreator(actionMap, actionType, actionName, 'set', 'reducer');
@@ -218,19 +209,15 @@ function defineActionsAndReducers(template, actionMap, parentActionType, parentA
       setPublicActionCreator(actionMap, actionType, actionName, 'reset', 'reducer');
     } else if (val && val instanceof Object && !(val instanceof Array) && !(val instanceof String) && !(val instanceof Number) && !(val instanceof Boolean)) {
       //Override the name if we have an alias
-      if (val.hasOwnProperty('_actionNameAlias'))
-        actionName = fullActionType(parentActionName, val._actionNameAlias);
+      if (val.hasOwnProperty('_actionNameAlias')) actionName = fullActionType(parentActionName, val._actionNameAlias);
 
       //Walk
       if (parentActionName) {
         setPublicActionCreator(actionMap, actionType, actionName, 'set', 'template');
         setPublicActionCreator(actionMap, actionType, actionName, 'update', 'template');
       }
-      
-      if (!actionName)
-        setPublicActionCreator(actionMap, actionType, fullActionType(parentActionName, key), 'reset', 'template');
-      else
-        setPublicActionCreator(actionMap, actionType, actionName, 'reset', 'template');
+
+      if (!actionName) setPublicActionCreator(actionMap, actionType, fullActionType(parentActionName, key), 'reset', 'template');else setPublicActionCreator(actionMap, actionType, actionName, 'reset', 'template');
 
       reducerMap[key] = defineActionsAndReducers(val, actionMap, actionType, actionName, key);
     } else {
@@ -251,8 +238,8 @@ function _actionNameAlias(name, obj) {
 }
 
 module.exports = Object.assign(module.exports, {
-  _actionNameAlias,
-  INITIAL_STATE,
-  createReducer,
-  defineActionsAndReducers
+  _actionNameAlias: _actionNameAlias,
+  INITIAL_STATE: INITIAL_STATE,
+  createReducer: createReducer,
+  defineActionsAndReducers: defineActionsAndReducers
 });
