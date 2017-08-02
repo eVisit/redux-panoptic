@@ -14,7 +14,7 @@ A Redux wrapper module that allows you to build out your redux store using templ
 
 Simply specify a template for your store, and build the store:
 
-```
+```javascript
 // Run: `npm run example`
 
 import { applyMiddleware, buildStore, createReducer, _actionNameAlias } from 'redux-panoptic';
