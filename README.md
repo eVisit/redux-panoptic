@@ -4,11 +4,17 @@ A Redux wrapper module that allows you to build out your redux store using templ
 
 ## Table of contents
 - [Install](#install)
+- [About](#about)
 - [Usage](#usage)
+- [More](#more)
 
 ## <a name="install"></a>Install
 
 `npm install --save redux-panoptic`
+
+## <a name="about"></a>About
+
+Have you ever found yourself wading through file after file after file... through actions... through reducers, just wanting to make a simple update to your `redux` store? You want to make that simple update, but you have to modify an action, AND a reducer... or possibly more than one. Why does `redux` need to be so complicated and messy? Well, it doesn't! With `redux-panoptic` your `redux` store is built using a plain-object template. Any static values are created in the template are automatically added to the `redux` store with a default state, and actions to update, set, and reset. The template can be deeply nested, or you can create custom reducers (but need not create actions for this reducer... these are created automatically for you). See the magic at work below!
 
 ## <a name="usage"></a>Usage
 
