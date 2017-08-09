@@ -177,7 +177,7 @@ function setPublicActionCreator(actionMap, actionType, actionName, actionMethod,
   //console.log('Setting action: ', actoionCreatorName, actionType, actionName, actionMethod);
 
   //Get the path into the template, and get any current template object (if any)
-  let actionPath = actionType.replace(ACTION_SEPARATOR, '.'),
+  let actionPath = actionType.split(ACTION_SEPARATOR).join('.'),
       templatePath = 'template.' + actionPath,
       templateActionObj = utils.get(actionMap, templatePath, {});
 
