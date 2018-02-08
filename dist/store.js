@@ -54,11 +54,11 @@ function multiDispatch(store, actions, actionData) {
 
     for (var i = 0, il = keys.length; i < il; i++) {
       var key = keys[i];
-      if (!thisData.hasOwnProperty(key)) continue;
+      if (thisData && !thisData.hasOwnProperty(key)) continue;
 
       var thisActionTemplate = actionTemplate[key];
       //Dispatch child operations first, if any
-      doStoreDispatches(operation, thisData[key], thisActionTemplate);
+      doStoreDispatches(operation, thisData ? thisData[key] : null, thisActionTemplate);
     }
   }
 
