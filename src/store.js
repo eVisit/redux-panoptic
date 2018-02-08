@@ -48,12 +48,12 @@ function multiDispatch(store, actions, actionData) {
 
     for (var i = 0, il = keys.length; i < il; i++) {
       let key = keys[i];
-      if (!thisData.hasOwnProperty(key))
+      if (thisData && !thisData.hasOwnProperty(key))
         continue;
 
       let thisActionTemplate = actionTemplate[key];
       //Dispatch child operations first, if any
-      doStoreDispatches(operation, thisData[key], thisActionTemplate);
+      doStoreDispatches(operation, (thisData) ? thisData[key] : null, thisActionTemplate);
     }
   }
 
@@ -115,7 +115,7 @@ function buildStore(storeTemplate, middleware) {
       enumberable: false,
       value: function(setData) {
         return multiDispatch(store, actions, { set: setData });
-      }      
+      }
     },
     multiDispatchUpdate: {
       writable: true,
@@ -123,7 +123,7 @@ function buildStore(storeTemplate, middleware) {
       enumberable: false,
       value: function(updateData) {
         return multiDispatch(store, actions, { update: updateData });
-      }      
+      }
     }
   });
 
