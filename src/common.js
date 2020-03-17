@@ -24,7 +24,7 @@ function defaultReducer(state, action, defaultValue) {
 
   var actionMethod = action.method,
       payload = action.payload[0];
-  
+
   if (actionMethod === 'reset')
     return defaultValue;
 
@@ -96,7 +96,7 @@ function createCustomReducer(customReducer, boundAction) {
 
       state = INITIAL_STATE;
     }
-    
+
     if (!(customReducer instanceof Function))
       return (action.method === 'reset') ? customReducer : action.payload[0];
 
@@ -210,7 +210,7 @@ function defineActionsAndReducers(template, actionMap, parentActionType, parentA
       //Override the name if we have an alias
       if (val.hasOwnProperty('_actionNameAlias'))
         actionName = fullActionType(parentActionName, val._actionNameAlias);
-        
+
       //Custom reducer
       reducerMap[key] = createCustomReducer(val, key);
       setPublicActionCreator(actionMap, actionType, actionName, 'set', 'reducer');
@@ -226,7 +226,7 @@ function defineActionsAndReducers(template, actionMap, parentActionType, parentA
         setPublicActionCreator(actionMap, actionType, actionName, 'set', 'template');
         setPublicActionCreator(actionMap, actionType, actionName, 'update', 'template');
       }
-      
+
       if (!actionName)
         setPublicActionCreator(actionMap, actionType, fullActionType(parentActionName, key), 'reset', 'template');
       else
@@ -245,8 +245,24 @@ function defineActionsAndReducers(template, actionMap, parentActionType, parentA
   return createDefaultReducer(reducerMap, myKeyName);
 }
 
-function _actionNameAlias(name, obj) {
-  obj._actionNameAlias = name;
+function _actionNameAlias(name, _obj) {
+  var obj = _obj;
+
+  // If obj is a function, make a wrapper
+  // function, so we don't update the alias
+  // on an already existing function
+  if (obj instanceof Function) {
+    var func = obj;
+    obj = function() { return func.apply(this, arguments); };
+  }
+
+  Object.defineProperty(obj, '_actionNameAlias', {
+    writable: true,
+    enumerable: false,
+    configurable: true,
+    value: name
+  })
+
   return obj;
 }
 

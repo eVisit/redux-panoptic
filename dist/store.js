@@ -38,6 +38,7 @@ function multiDispatch(store, actions, actionData) {
 
     //Dispatch operation
     store.dispatch(thisAction(thisData));
+    dispatchHappened = true;
   }
 
   function doStoreDispatches(operation, thisData, actionTemplate) {
@@ -62,10 +63,13 @@ function multiDispatch(store, actions, actionData) {
     }
   }
 
+  var dispatchHappened = false;
+
   if (actionData instanceof Array) {
     for (var i = 0, il = actionData.length; i < il; i++) {
       var action = actionData[i];
       store.dispatch(action);
+      dispatchHappened = true;
     }
   } else {
     //Order of operations is reset, set, update
@@ -77,6 +81,8 @@ function multiDispatch(store, actions, actionData) {
       doStoreDispatches(operation, actionData[operation], actions.template);
     }
   }
+
+  return dispatchHappened;
 }
 
 function buildStore(storeTemplate, middleware) {

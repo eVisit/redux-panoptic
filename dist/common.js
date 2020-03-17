@@ -232,8 +232,26 @@ function defineActionsAndReducers(template, actionMap, parentActionType, parentA
   return createDefaultReducer(reducerMap, myKeyName);
 }
 
-function _actionNameAlias(name, obj) {
-  obj._actionNameAlias = name;
+function _actionNameAlias(name, _obj) {
+  var obj = _obj;
+
+  // If obj is a function, make a wrapper
+  // function, so we don't update the alias
+  // on an already existing function
+  if (obj instanceof Function) {
+    var func = obj;
+    obj = function obj() {
+      return func.apply(this, arguments);
+    };
+  }
+
+  Object.defineProperty(obj, '_actionNameAlias', {
+    writable: true,
+    enumerable: false,
+    configurable: true,
+    value: name
+  });
+
   return obj;
 }
 
