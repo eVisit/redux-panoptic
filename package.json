@@ -1,6 +1,6 @@
 {
   "name": "redux-panoptic",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Redux via templates, by eVisit",
   "main": "dist/store.js",
   "scripts": {
